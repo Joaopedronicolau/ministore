@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Vendas — MiniStore{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <h1>Vendas</h1>
+    <a href="{{ url_for('vendas.nova') }}" class="btn btn-primary">+ Nova Venda</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Cliente</th>
+            <th>Data</th>
+            <th>Total</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for venda in vendas %}
+        <tr>
+            <td>{{ venda.id }}</td>
+            <td>{{ venda.cliente }}</td>
+            <td>{{ venda.data_venda.strftime('%d/%m/%Y %H:%M') if venda.data_venda else '' }}</td>
+            <td>R$ {{ ("%.2f"|format(venda.total))|replace('.', ',') }}</td>
+            <td>
+                <a href="{{ url_for('vendas.detalhe', id=venda.id) }}"
+                   class="btn btn-secondary">Detalhes</a>
+                <form action="{{ url_for('vendas.excluir', id=venda.id) }}"
+                      method="post" style="display:inline"
+                      onsubmit="return confirm('Excluir esta venda?');">
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5" style="text-align:center;">Nenhuma venda registrada.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
